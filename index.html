@@ -16,7 +16,8 @@
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #f1f5f9; 
-            overscroll-behavior-y: contain; /* Evita o "puxar para atualizar" no mobile */
+            overscroll-behavior-y: contain;
+            margin-bottom: 70px; /* Espaço para a barra inferior no mobile */
         }
 
         .bg-azul { background-color: var(--azul-diadema); }
@@ -24,6 +25,7 @@
         .bg-dourado { background-color: var(--dourado-diadema); }
         .text-dourado { color: var(--dourado-diadema); }
 
+        /* Sidebar Desktop */
         .sidebar { background-color: var(--azul-diadema); border-right: 5px solid var(--dourado-diadema); }
         
         .nav-item {
@@ -38,19 +40,45 @@
             font-weight: bold;
         }
 
+        /* Barra Inferior Mobile */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--azul-diadema);
+            border-top: 3px solid var(--dourado-diadema);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 50;
+        }
+
+        .mobile-nav-btn {
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .mobile-nav-btn.active {
+            color: var(--dourado-diadema);
+        }
+
         .card-noticia {
             background: white;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border-left: 8px solid var(--azul-diadema);
-            transition: all 0.3s;
-            overflow: hidden;
         }
 
         .content-section { display: none; }
         .content-section.active { display: block; }
 
-        /* Estilo do Letreiro */
+        /* Letreiro */
         .letreiro-container {
             background-color: var(--dourado-diadema);
             color: var(--azul-diadema);
@@ -58,9 +86,6 @@
             white-space: nowrap;
             padding: 8px 0;
             font-weight: 900;
-            font-size: 14px;
-            text-transform: uppercase;
-            border-bottom: 2px solid var(--azul-diadema);
         }
 
         .letreiro-texto {
@@ -74,160 +99,139 @@
             100% { transform: translate(-100%, 0); }
         }
 
-        /* JOGO DA COBRINHA */
+        /* JOGO */
         #game-canvas {
             background-color: #001a33;
             border: 4px solid var(--dourado-diadema);
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
-            display: block;
-            margin: 0 auto;
             max-width: 100%;
-            touch-action: none; /* Desabilita gestos do browser sobre o jogo */
+            touch-action: none;
         }
 
         .control-btn {
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid var(--dourado-diadema);
             color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 15px;
+            width: 55px;
+            height: 55px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            transition: background 0.2s;
+            font-size: 20px;
         }
+        
+        .control-btn:active { background: var(--dourado-diadema); color: var(--azul-diadema); }
 
-        .control-btn:active {
-            background: var(--dourado-diadema);
-            color: var(--azul-diadema);
+        @media (min-width: 1024px) {
+            body { margin-bottom: 0; }
+            .mobile-nav { display: none; }
         }
     </style>
 </head>
 <body class="flex min-h-screen">
 
-    <!-- Menu Lateral -->
+    <!-- Menu Lateral (Desktop) -->
     <aside class="sidebar w-64 text-white hidden lg:flex flex-col shrink-0 shadow-2xl">
         <div class="p-8 text-center bg-black/10">
-            <h1 class="text-3xl font-black tracking-tighter text-dourado uppercase italic leading-none">Educa</h1>
-            <h1 class="text-3xl font-black tracking-tighter text-white uppercase italic">Diadema</h1>
+            <h1 class="text-3xl font-black text-dourado italic leading-none">Educa</h1>
+            <h1 class="text-3xl font-black text-white italic">Diadema</h1>
         </div>
-
         <nav class="mt-8 flex-grow px-4 space-y-2">
-            <button onclick="showSection('inicio')" id="nav-inicio" class="nav-item active w-full text-left p-4 rounded-xl flex items-center">
-                <span class="mr-3">🏠</span> Capa do Site
-            </button>
-            <button onclick="showSection('escrever')" id="nav-escrever" class="nav-item w-full text-left p-4 rounded-xl flex items-center">
-                <span class="mr-3">✍️</span> Nova Matéria
-            </button>
+            <button onclick="showSection('inicio')" id="nav-inicio" class="nav-item active w-full text-left p-4 rounded-xl flex items-center">🏠 Início</button>
+            <button onclick="showSection('escrever')" id="nav-escrever" class="nav-item w-full text-left p-4 rounded-xl flex items-center">✍️ Escrever</button>
+            <button onclick="showSection('jogo')" id="nav-jogo" class="nav-item w-full text-left p-4 rounded-xl flex items-center">🐍 Recreio</button>
         </nav>
-
-        <!-- Seção Inferior do Menu -->
-        <div class="p-4 space-y-4 border-t border-white/10">
-            <!-- BOTÃO DO JOGO NO FUNDO -->
-            <button onclick="showSection('jogo')" id="nav-jogo" class="w-full text-center p-4 rounded-xl font-black bg-green-600 hover:bg-green-500 text-white shadow-lg transition-all flex items-center justify-center gap-2">
-                <span>🐍</span> HORA DO RECREIO
-            </button>
-
+        <div class="p-6">
             <div class="p-4 bg-black/20 rounded-xl">
-                <p class="text-[10px] font-bold text-dourado uppercase mb-1">Editor-Chefe</p>
+                <p class="text-[10px] font-bold text-dourado uppercase">Editor-Chefe</p>
                 <p class="text-sm font-black">Osmir Belo</p>
             </div>
         </div>
     </aside>
 
+    <!-- Barra de Navegação Inferior (Mobile) -->
+    <nav class="mobile-nav lg:hidden">
+        <button onclick="showSection('inicio')" id="m-nav-inicio" class="mobile-nav-btn active">
+            <span class="text-xl">🏠</span>
+            <span>Início</span>
+        </button>
+        <button onclick="showSection('escrever')" id="m-nav-escrever" class="mobile-nav-btn">
+            <span class="text-xl">✍️</span>
+            <span>Escrever</span>
+        </button>
+        <button onclick="showSection('jogo')" id="m-nav-jogo" class="mobile-nav-btn">
+            <span class="text-xl">🐍</span>
+            <span>Recreio</span>
+        </button>
+    </nav>
+
     <!-- Conteúdo Principal -->
     <main class="flex-grow flex flex-col h-screen overflow-hidden">
         
-        <header class="bg-azul p-5 flex items-center justify-between shadow-md">
-            <h2 class="text-dourado font-black text-xl lg:hidden italic uppercase">EDUCA DIADEMA</h2>
-            <div class="hidden lg:block text-white font-bold text-sm">
-                Portal de Notícias <span class="text-dourado mx-2">|</span> <span id="current-date"></span>
+        <header class="bg-azul p-4 flex items-center justify-between shadow-md shrink-0">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-dourado rounded-lg flex items-center justify-center font-black text-azul text-xs">ED</div>
+                <h2 class="text-white font-black text-sm italic lg:text-lg">EDUCA DIADEMA</h2>
             </div>
-            <div class="flex items-center space-x-2 text-white text-[10px] font-bold uppercase">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
-                <span>Redação Ativa</span>
-            </div>
+            <div class="hidden lg:block text-white font-bold text-xs uppercase opacity-70">Painel Administrativo</div>
+            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
         </header>
 
-        <!-- LETREIRO -->
-        <div class="letreiro-container">
+        <div class="letreiro-container shrink-0">
             <div class="letreiro-texto italic">
-                🔴 ÚLTIMA NOTÍCIA: CONFIRA A NOVA POSTAGEM NO INSTAGRAM DO EDUCA DIADEMA SOBRE A EDUCAÇÃO NA NOSSA CIDADE! — ACESSE O LINK NA MATÉRIA ABAIXO —
+                🔴 ÚLTIMA NOTÍCIA: ACESSE O INSTAGRAM DO EDUCA DIADEMA PARA MAIS CONTEÚDO EXCLUSIVO!
             </div>
         </div>
 
-        <div class="flex-grow overflow-y-auto p-6 lg:p-12 bg-slate-100">
+        <div class="flex-grow overflow-y-auto p-4 lg:p-10 bg-slate-100">
             
             <!-- SEÇÃO INÍCIO -->
             <div id="section-inicio" class="content-section active">
-                <div class="max-w-4xl mx-auto">
-                    <div class="mb-12 border-b-4 border-azul pb-4">
-                        <h3 class="text-4xl font-black text-azul uppercase italic">Plantão de Notícias</h3>
-                    </div>
-
-                    <div class="space-y-8" id="lista-noticias">
-                        <article class="card-noticia p-8">
-                            <div class="flex flex-col md:flex-row gap-8">
-                                <div class="w-full md:w-48 h-48 shrink-0 overflow-hidden rounded-xl shadow-md border-2 border-dourado">
-                                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=500" alt="Educação" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex-grow">
-                                    <div class="flex items-center gap-3 mb-3">
-                                        <span class="bg-azul text-dourado text-[10px] font-black px-3 py-1 rounded uppercase">Instagram</span>
-                                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Postado agora</span>
-                                    </div>
-                                    <h4 class="text-2xl font-black text-azul mb-3 leading-tight uppercase italic">Confira as novidades no nosso perfil oficial!</h4>
-                                    <p class="text-slate-600 leading-relaxed text-sm mb-6 italic font-medium">"A educação é a base para uma geração de pensadores."</p>
-                                    
-                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t pt-6">
-                                        <div class="flex items-center text-xs font-black text-azul uppercase">
-                                            <span>Por Osmir Belo</span>
-                                        </div>
-                                        <a href="https://www.instagram.com/p/DUZFku4jHnl/" target="_blank" class="bg-azul text-dourado px-6 py-3 rounded-lg font-black text-xs uppercase text-center hover:scale-105 transition-transform shadow-lg">
-                                            VER POST NO INSTAGRAM 🔗
-                                        </a>
-                                    </div>
-                                </div>
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <h3 class="text-2xl font-black text-azul uppercase italic border-b-4 border-dourado inline-block">Capa do Site</h3>
+                    <article class="card-noticia p-6 bg-white">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=400" class="w-full md:w-40 h-40 object-cover rounded-xl border-2 border-slate-100">
+                            <div>
+                                <span class="bg-azul text-dourado text-[10px] font-black px-2 py-1 rounded">DESTAQUE</span>
+                                <h4 class="text-xl font-black text-azul mt-2 leading-tight uppercase italic">Educação em Foco: Novas postagens no Instagram!</h4>
+                                <p class="text-slate-500 text-sm mt-2 italic font-medium">"Transformando a educação através da comunicação."</p>
+                                <a href="https://www.instagram.com/p/DUZFku4jHnl/" target="_blank" class="inline-block mt-4 bg-azul text-dourado px-4 py-2 rounded-lg font-black text-[10px] uppercase">Acessar Perfil 🔗</a>
                             </div>
-                        </article>
-                    </div>
+                        </div>
+                    </article>
                 </div>
             </div>
 
             <!-- SEÇÃO ESCREVER -->
             <div id="section-escrever" class="content-section">
-                <div class="max-w-3xl mx-auto bg-white p-10 rounded-2xl shadow-2xl border-t-8 border-azul">
-                    <h3 class="text-3xl font-black text-azul mb-8 uppercase italic border-b pb-4">Nova Postagem</h3>
-                    <div class="space-y-6">
-                        <input type="text" placeholder="Assunto (Ex: Gestão)" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-azul">
-                        <input type="text" placeholder="Título da Manchete" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-black text-2xl text-azul">
-                        <textarea placeholder="Texto completo..." class="w-full h-80 p-6 bg-slate-50 border border-slate-200 rounded-xl resize-none text-lg"></textarea>
-                        <button class="w-full bg-azul text-dourado py-5 rounded-2xl font-black text-lg uppercase shadow-xl hover:brightness-110">GERAR BLOCO 🚀</button>
+                <div class="max-w-2xl mx-auto bg-white p-6 lg:p-10 rounded-2xl shadow-xl border-t-8 border-azul">
+                    <h3 class="text-2xl font-black text-azul mb-6 uppercase italic">Nova Postagem</h3>
+                    <div class="space-y-4">
+                        <input type="text" placeholder="Título da Matéria" class="w-full p-4 bg-slate-50 border rounded-xl font-black text-azul">
+                        <textarea placeholder="Conteúdo da notícia..." class="w-full h-48 lg:h-64 p-4 bg-slate-50 border rounded-xl resize-none"></textarea>
+                        <button class="w-full bg-azul text-dourado py-4 rounded-xl font-black uppercase shadow-lg">Publicar 🚀</button>
                     </div>
                 </div>
             </div>
 
             <!-- SEÇÃO: JOGO DA COBRINHA -->
             <div id="section-jogo" class="content-section text-center">
-                <div class="max-w-lg mx-auto bg-azul p-6 rounded-3xl shadow-2xl border-4 border-dourado">
-                    <h3 class="text-2xl font-black text-dourado mb-1 uppercase italic">Snake Game Educa</h3>
-                    <p class="text-white text-[10px] mb-4 uppercase tracking-widest font-bold">Use as setas ou os botões abaixo!</p>
+                <div class="max-w-sm mx-auto bg-azul p-4 lg:p-6 rounded-3xl shadow-2xl border-4 border-dourado">
+                    <h3 class="text-xl font-black text-dourado mb-4 uppercase italic">Snake Educa</h3>
                     
-                    <!-- O Canvas agora é 300x300 para caber melhor -->
                     <canvas id="game-canvas" width="300" height="300"></canvas>
                     
-                    <div class="mt-4 flex justify-between items-center bg-black/30 p-3 rounded-xl">
-                        <div class="text-white font-black text-lg uppercase">Pontos: <span id="score" class="text-dourado">0</span></div>
-                        <button onclick="startGame()" class="bg-dourado text-azul font-black px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform uppercase italic">Reiniciar</button>
+                    <div class="mt-4 flex justify-between items-center bg-black/30 p-3 rounded-xl mb-6">
+                        <div class="text-white font-black text-sm uppercase">Score: <span id="score" class="text-dourado">0</span></div>
+                        <button onclick="startGame()" class="bg-dourado text-azul font-black px-3 py-1 rounded-full text-[10px] uppercase">Reiniciar</button>
                     </div>
 
                     <!-- CONTROLES MOBILE -->
-                    <div class="mt-6 flex flex-col items-center gap-2">
+                    <div class="flex flex-col items-center gap-1">
                         <button onclick="changeDir(0, -1)" class="control-btn">▲</button>
-                        <div class="flex gap-8">
+                        <div class="flex gap-10">
                             <button onclick="changeDir(-1, 0)" class="control-btn">◀</button>
                             <button onclick="changeDir(1, 0)" class="control-btn">▶</button>
                         </div>
@@ -241,60 +245,53 @@
 
     <script>
         function showSection(sectionId) {
+            // Esconde todas
             document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            
-            document.getElementById('nav-jogo').classList.remove('ring-4', 'ring-dourado');
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => btn.classList.remove('active'));
 
+            // Mostra a selecionada
             document.getElementById('section-' + sectionId).classList.add('active');
             
+            // Ativa botão no desktop
             const navBtn = document.getElementById('nav-' + sectionId);
             if (navBtn) navBtn.classList.add('active');
+
+            // Ativa botão no mobile
+            const mobileBtn = document.getElementById('m-nav-' + sectionId);
+            if (mobileBtn) mobileBtn.classList.add('active');
             
             if (sectionId === 'jogo') {
-                document.getElementById('nav-jogo').classList.add('ring-4', 'ring-dourado');
                 startGame();
             } else {
                 stopGame();
             }
         }
 
-        const data = new Date();
-        document.getElementById('current-date').innerText = data.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
-
-        // LÓGICA DO JOGO DA COBRINHA
+        // JOGO DA COBRINHA
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
         const scoreElement = document.getElementById('score');
         
-        let snake = [{x: 10, y: 10}];
-        let food = {x: 12, y: 12};
-        let dx = 0;
-        let dy = 0;
-        let score = 0;
-        let gameInterval;
-        const gridSize = 15; // Ajustado para o canvas de 300
+        let snake, food, dx, dy, score, gameInterval;
+        const gridSize = 15;
         const tileCount = 20;
 
         function startGame() {
             stopGame();
             snake = [{x: 10, y: 10}];
-            food = {x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount)};
+            food = {x: 5, y: 5};
             dx = 1; dy = 0;
             score = 0;
             scoreElement.innerText = score;
-            gameInterval = setInterval(drawGame, 100);
+            gameInterval = setInterval(drawGame, 120); // Um pouquinho mais lento para ser mais fácil no celular
         }
 
-        function stopGame() {
-            clearInterval(gameInterval);
-        }
+        function stopGame() { clearInterval(gameInterval); }
 
         function changeDir(newDx, newDy) {
-            // Evita inverter a direção (ex: ir para a esquerda se está indo para a direita)
             if ((newDx === -dx && newDx !== 0) || (newDy === -dy && newDy !== 0)) return;
-            dx = newDx;
-            dy = newDy;
+            dx = newDx; dy = newDy;
         }
 
         function drawGame() {
@@ -306,7 +303,6 @@
             }
 
             snake.unshift(head);
-
             if (head.x === food.x && head.y === food.y) {
                 score += 10;
                 scoreElement.innerText = score;
@@ -318,30 +314,19 @@
             ctx.fillStyle = '#001a33';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Comida
             ctx.fillStyle = '#ffcc00';
             ctx.beginPath();
             ctx.arc(food.x * gridSize + gridSize/2, food.y * gridSize + gridSize/2, gridSize/2 - 2, 0, Math.PI * 2);
             ctx.fill();
 
-            // Cobra
-            ctx.fillStyle = '#4ade80';
-            snake.forEach((segment, index) => {
-                // Cabeça um pouco diferente
-                if (index === 0) ctx.fillStyle = '#22c55e';
-                else ctx.fillStyle = '#4ade80';
-                
-                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
+            snake.forEach((s, i) => {
+                ctx.fillStyle = i === 0 ? '#22c55e' : '#4ade80';
+                ctx.fillRect(s.x * gridSize, s.y * gridSize, gridSize - 1, gridSize - 1);
             });
         }
 
-        // Prevenção de scroll e mapeamento de teclas
         window.addEventListener('keydown', e => {
-            const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '];
-            if (keys.includes(e.key)) {
-                e.preventDefault(); // Impede a página de rolar
-            }
-
+            if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) e.preventDefault();
             if (e.key === 'ArrowUp') changeDir(0, -1);
             if (e.key === 'ArrowDown') changeDir(0, 1);
             if (e.key === 'ArrowLeft') changeDir(-1, 0);
