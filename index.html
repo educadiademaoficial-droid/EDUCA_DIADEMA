@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educa Diadema | Painel do Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        :root {
+            --azul-diadema: #003366;
+            --dourado-diadema: #ffcc00;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f1f5f9; 
+        }
+
+        .bg-azul { background-color: var(--azul-diadema); }
+        .text-azul { color: var(--azul-diadema); }
+        .bg-dourado { background-color: var(--dourado-diadema); }
+        .text-dourado { color: var(--dourado-diadema); }
+
+        .sidebar { background-color: var(--azul-diadema); border-right: 5px solid var(--dourado-diadema); }
+        
+        .nav-item {
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-item.active { 
+            background-color: rgba(255, 255, 255, 0.1); 
+            border-left: 4px solid var(--dourado-diadema); 
+            color: var(--dourado-diadema);
+            font-weight: bold;
+        }
+
+        .card-noticia {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 8px solid var(--azul-diadema);
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+
+        /* Estilo do Letreiro (Marquee) */
+        .letreiro-container {
+            background-color: var(--dourado-diadema);
+            color: var(--azul-diadema);
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 8px 0;
+            font-weight: 900;
+            font-size: 14px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--azul-diadema);
+        }
+
+        .letreiro-texto {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 20s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+
+        /* Ajuste da imagem da notícia */
+        .img-noticia {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+
+    <!-- Menu Lateral -->
+    <aside class="sidebar w-64 text-white hidden lg:flex flex-col shrink-0 shadow-2xl">
+        <div class="p-8 text-center bg-black/10">
+            <h1 class="text-3xl font-black tracking-tighter text-dourado uppercase italic leading-none">Educa</h1>
+            <h1 class="text-3xl font-black tracking-tighter text-white uppercase italic">Diadema</h1>
+        </div>
+
+        <nav class="mt-8 flex-grow px-4 space-y-2">
+            <button onclick="showSection('inicio')" id="nav-inicio" class="nav-item active w-full text-left p-4 rounded-xl flex items-center">
+                <span class="mr-3">🏠</span> Capa do Site
+            </button>
+            <button onclick="showSection('escrever')" id="nav-escrever" class="w-full bg-dourado text-azul font-black p-4 rounded-xl mt-6 shadow-lg hover:brightness-110 flex items-center justify-center">
+                ✍️ NOVA MATÉRIA
+            </button>
+        </nav>
+
+        <div class="p-6 bg-black/20 mt-auto">
+            <p class="text-[10px] font-bold text-dourado uppercase mb-1">Editor-Chefe</p>
+            <p class="text-sm font-black">Osmir Belo</p>
+        </div>
+    </aside>
+
+    <!-- Conteúdo -->
+    <main class="flex-grow flex flex-col h-screen overflow-hidden">
+        
+        <header class="bg-azul p-5 flex items-center justify-between shadow-md">
+            <h2 class="text-dourado font-black text-xl lg:hidden">EDUCA DIADEMA</h2>
+            <div class="hidden lg:block text-white font-bold text-sm">
+                Portal de Notícias <span class="text-dourado mx-2">|</span> <span id="current-date"></span>
+            </div>
+            <div class="flex items-center space-x-2 text-white text-[10px] font-bold uppercase">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
+                <span>Redação Ativa</span>
+            </div>
+        </header>
+
+        <!-- LETREIRO DE ROLAGEM -->
+        <div class="letreiro-container">
+            <div class="letreiro-texto italic">
+                🔴 ÚLTIMA NOTÍCIA: CONFIRA A NOVA POSTAGEM NO INSTAGRAM DO EDUCA DIADEMA SOBRE A EDUCAÇÃO NA NOSSA CIDADE! — ACESSE O LINK NA MATÉRIA ABAIXO —
+            </div>
+        </div>
+
+        <div class="flex-grow overflow-y-auto p-6 lg:p-12 bg-slate-100">
+            
+            <div id="section-inicio" class="content-section active">
+                <div class="max-w-4xl mx-auto">
+                    <div class="mb-12 border-b-4 border-azul pb-4 flex justify-between items-center">
+                        <h3 class="text-4xl font-black text-azul uppercase italic">Plantão de Notícias</h3>
+                    </div>
+
+                    <div class="space-y-8" id="lista-noticias">
+                        
+                        <!-- BLOCO DA NOTÍCIA COM IMAGEM -->
+                        <article class="card-noticia p-8">
+                            <div class="flex flex-col md:flex-row gap-8">
+                                <!-- AQUI ENTRA A FOTO -->
+                                <div class="w-full md:w-48 h-48 shrink-0 overflow-hidden rounded-xl shadow-md border-2 border-dourado">
+                                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=500" alt="Educação" class="img-noticia">
+                                    <!-- Dica: Para usar sua foto, você pode subir ela no GitHub e trocar o link acima pelo nome do arquivo -->
+                                </div>
+                                <div class="flex-grow">
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <span class="bg-azul text-dourado text-[10px] font-black px-3 py-1 rounded uppercase">Instagram</span>
+                                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Postado agora</span>
+                                    </div>
+                                    <h4 class="text-2xl font-black text-azul mb-3 leading-tight uppercase italic">Confira as novidades no nosso perfil oficial!</h4>
+                                    <p class="text-slate-600 leading-relaxed text-sm mb-6 italic font-medium">"A educação é a base para uma geração de pensadores."</p>
+                                    
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t pt-6">
+                                        <div class="flex items-center text-xs font-black text-azul uppercase">
+                                            <span>Por Osmir Belo</span>
+                                        </div>
+                                        <a href="https://www.instagram.com/p/DUZFku4jHnl/" target="_blank" class="bg-azul text-dourado px-6 py-3 rounded-lg font-black text-xs uppercase text-center hover:scale-105 transition-transform shadow-lg">
+                                            VER POST NO INSTAGRAM 🔗
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEÇÃO ESCREVER -->
+            <div id="section-escrever" class="content-section">
+                <div class="max-w-3xl mx-auto bg-white p-10 rounded-2xl shadow-2xl border-t-8 border-azul">
+                    <h3 class="text-3xl font-black text-azul mb-8 uppercase italic border-b pb-4">Nova Postagem</h3>
+                    <div class="space-y-6">
+                        <input type="text" id="input-tag" placeholder="Assunto (Ex: Gestão)" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-azul">
+                        <input type="text" id="input-titulo" placeholder="Título da Manchete" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-black text-2xl text-azul">
+                        <textarea id="input-texto" placeholder="Texto completo..." class="w-full h-80 p-6 bg-slate-50 border border-slate-200 rounded-xl resize-none text-lg"></textarea>
+                        
+                        <button class="w-full bg-azul text-dourado py-5 rounded-2xl font-black text-lg uppercase shadow-xl hover:brightness-110 transition-all">
+                            GERAR BLOCO DE NOTÍCIA 🚀
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById('section-' + sectionId).classList.add('active');
+            document.getElementById('nav-' + sectionId).classList.add('active');
+        }
+
+        const data = new Date();
+        document.getElementById('current-date').innerText = data.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+    </script>
+</body>
+</html>
