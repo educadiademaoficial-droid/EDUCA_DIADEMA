@@ -3,111 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Educa Diadema | Painel do Editor</title>
+    <title>Educa Diadema | Portal Oficial</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
         
         :root {
-            --azul-diadema: #003366;
-            --dourado-diadema: #ffcc00;
+            --azul-diadema: #004a8d;
+            --dourado-diadema: #ffb400;
         }
 
         body { 
             font-family: 'Inter', sans-serif; 
-            background-color: #f1f5f9; 
+            background-color: #f8fafc; 
             margin: 0;
             padding: 0;
             overflow: hidden;
             height: 100vh;
-            height: 100dvh; /* Altura dinâmica para mobile */
+            height: 100dvh;
         }
 
-        .bg-azul { background-color: var(--azul-diadema); }
-        .text-azul { color: var(--azul-diadema); }
-        .bg-dourado { background-color: var(--dourado-diadema); }
-        .text-dourado { color: var(--dourado-diadema); }
-
-        /* Sidebar Desktop */
-        .sidebar { 
-            background-color: var(--azul-diadema); 
-            border-right: 5px solid var(--dourado-diadema); 
-            height: 100%;
-        }
-        
-        .nav-item {
-            transition: all 0.2s;
-            border-left: 4px solid transparent;
+        .glass-header {
+            background: var(--azul-diadema);
+            border-bottom: 3px solid var(--dourado-diadema);
         }
 
-        .nav-item.active { 
-            background-color: rgba(255, 255, 255, 0.1); 
-            border-left: 4px solid var(--dourado-diadema); 
-            color: var(--dourado-diadema);
-            font-weight: bold;
-        }
-
-        /* Barra Inferior Mobile Corrigida */
         .mobile-nav {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 70px;
-            background-color: var(--azul-diadema);
-            border-top: 4px solid var(--dourado-diadema);
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 400px;
+            height: 65px;
+            background: #003366f2;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 180, 0, 0.4);
+            border-radius: 20px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            z-index: 9999; /* Garantir que fique acima de tudo */
-            padding-bottom: env(safe-area-inset-bottom); /* Suporte para iPhone X+ */
+            z-index: 9999;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
         .mobile-nav-btn {
             color: white;
             flex: 1;
-            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            border: none;
-            background: transparent;
+            font-weight: 700;
         }
 
-        .mobile-nav-btn.active {
-            color: var(--dourado-diadema);
-            background: rgba(255, 255, 255, 0.05);
-        }
+        .mobile-nav-btn.active { color: var(--dourado-diadema); }
 
-        .card-noticia {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border-left: 8px solid var(--azul-diadema);
-            margin-bottom: 20px;
-        }
-
-        .content-section { display: none; }
-        .content-section.active { display: block; }
-
-        /* Letreiro */
         .letreiro-container {
-            background-color: var(--dourado-diadema);
-            color: var(--azul-diadema);
+            background: var(--dourado-diadema);
+            color: #000;
             overflow: hidden;
             white-space: nowrap;
-            padding: 8px 0;
+            padding: 10px 0;
             font-weight: 900;
+            font-size: 13px;
+            text-transform: uppercase;
         }
 
         .letreiro-texto {
             display: inline-block;
             padding-left: 100%;
-            animation: marquee 25s linear infinite;
+            animation: marquee 30s linear infinite;
         }
 
         @keyframes marquee {
@@ -115,223 +81,329 @@
             100% { transform: translate(-100%, 0); }
         }
 
-        /* Jogo da Cobrinha */
-        #game-canvas {
-            background-color: #001a33;
-            border: 4px solid var(--dourado-diadema);
-            border-radius: 10px;
-            max-width: 100%;
-            touch-action: none;
-        }
+        .content-section { display: none; }
+        .content-section.active { display: block; }
 
-        .control-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid var(--dourado-diadema);
+        .d-pad-btn {
+            background: #003366;
             color: white;
-            width: 55px;
-            height: 55px;
-            border-radius: 15px;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 24px;
+            box-shadow: 0 4px 0 #001a33;
         }
-        
-        .control-btn:active { background: var(--dourado-diadema); color: var(--azul-diadema); }
 
-        /* Responsividade */
-        @media (max-width: 1023px) {
-            .sidebar { display: none; }
-            .scroll-area { 
-                padding-bottom: 90px !important; /* Espaço extra para a barra não cobrir */
-            } 
+        .d-pad-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #001a33;
+        }
+
+        #game-canvas {
+            border-radius: 12px;
+            background: #001a33;
+            width: 100%;
+            max-width: 280px;
+            touch-action: none;
+        }
+
+        .social-card {
+            transition: all 0.3s ease;
+        }
+        .social-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .news-banner {
+            background: linear-gradient(135deg, #004a8d 0%, #002b52 100%);
+            border-left: 8px solid var(--dourado-diadema);
         }
     </style>
 </head>
-<body class="flex">
+<body class="flex flex-col lg:flex-row">
 
-    <!-- Sidebar (Desktop) -->
-    <aside class="sidebar w-64 text-white hidden lg:flex flex-col shrink-0">
-        <div class="p-8 text-center bg-black/10">
-            <h1 class="text-3xl font-black text-dourado italic leading-none">Educa</h1>
-            <h1 class="text-3xl font-black text-white italic">Diadema</h1>
+    <!-- Sidebar Desktop -->
+    <aside class="hidden lg:flex w-72 bg-[#004a8d] text-white flex-col shrink-0 border-r-4 border-amber-400">
+        <div class="p-8 text-center">
+            <div class="bg-white rounded-xl p-3 mb-4 shadow-lg">
+                <div class="flex flex-col items-center">
+                    <span class="text-4xl">📖</span>
+                    <div class="text-[#004a8d] font-black text-2xl leading-none">EDUCA DIADEMA</div>
+                </div>
+            </div>
+            <p class="text-[10px] font-bold tracking-[0.2em] text-white/70 uppercase">Informação & Educação</p>
         </div>
-        <nav class="mt-8 flex-grow px-4 space-y-2">
-            <button onclick="showSection('inicio')" id="nav-inicio" class="nav-item active w-full text-left p-4 rounded-xl flex items-center">🏠 Início</button>
-            <button onclick="showSection('escrever')" id="nav-escrever" class="nav-item w-full text-left p-4 rounded-xl flex items-center">✍️ Escrever</button>
-            <button onclick="showSection('jogo')" id="nav-jogo" class="nav-item w-full text-left p-4 rounded-xl flex items-center">🐍 Recreio</button>
+        
+        <nav class="mt-4 px-6 space-y-3">
+            <button onclick="showSection('inicio')" id="nav-inicio" class="w-full text-left p-4 rounded-xl font-bold transition flex items-center gap-3">🏠 Início</button>
+            <button onclick="showSection('nos')" id="nav-nos" class="w-full text-left p-4 rounded-xl font-bold transition flex items-center gap-3">👥 Nós</button>
+            <button onclick="showSection('jogo')" id="nav-jogo" class="w-full text-left p-4 rounded-xl font-bold transition flex items-center gap-3">🐍 Recreio</button>
         </nav>
-        <div class="p-6">
-            <div class="p-4 bg-black/20 rounded-xl text-center">
-                <p class="text-[10px] font-bold text-dourado uppercase">Editor-Chefe</p>
-                <p class="text-sm font-black text-white">Osmir Belo</p>
+
+        <div class="mt-auto p-8">
+            <div class="p-4 rounded-2xl bg-black/20 text-center border border-white/10">
+                <p class="text-[9px] uppercase font-black text-amber-400 mb-1">Diretor Responsável</p>
+                <p class="text-sm font-black">Osmir Belo</p>
             </div>
         </div>
     </aside>
 
-    <!-- Menu Mobile (Barra Inferior) -->
+    <!-- Menu Mobile -->
     <nav class="mobile-nav lg:hidden">
         <button onclick="showSection('inicio')" id="m-nav-inicio" class="mobile-nav-btn active">
-            <span class="text-2xl">🏠</span>
+            <span class="text-xl">🏠</span>
             <span>Início</span>
         </button>
-        <button onclick="showSection('escrever')" id="m-nav-escrever" class="mobile-nav-btn">
-            <span class="text-2xl">✍️</span>
-            <span>Postar</span>
+        <button onclick="showSection('nos')" id="m-nav-nos" class="mobile-nav-btn">
+            <span class="text-xl">👥</span>
+            <span>Nós</span>
         </button>
         <button onclick="showSection('jogo')" id="m-nav-jogo" class="mobile-nav-btn">
-            <span class="text-2xl">🐍</span>
+            <span class="text-xl">🐍</span>
             <span>Jogo</span>
         </button>
     </nav>
 
-    <!-- Conteúdo Principal -->
-    <main class="flex-grow flex flex-col h-full w-full overflow-hidden">
+    <!-- Main -->
+    <main class="flex-grow flex flex-col h-screen overflow-hidden w-full">
         
-        <header class="bg-azul p-4 flex items-center justify-between shadow-md shrink-0 z-50">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-dourado rounded-lg flex items-center justify-center font-black text-azul text-xs">ED</div>
-                <h2 class="text-white font-black text-sm italic lg:text-lg uppercase">Portal Educa Diadema</h2>
+        <header class="glass-header p-4 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-amber-400 rounded-lg flex items-center justify-center font-black text-[#004a8d] text-xl shadow-md">ED</div>
+                <h2 class="text-white font-black text-lg italic uppercase tracking-tighter">Educa Diadema</h2>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="text-[10px] text-white/50 font-bold hidden sm:block">ONLINE</span>
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <div class="text-right">
+                <div class="text-white/60 text-[10px] font-bold uppercase tracking-wider">Diadema/SP - 2026</div>
+                <div id="relogio" class="text-amber-400 font-black text-sm tabular-nums">00:00:00</div>
             </div>
         </header>
 
         <div class="letreiro-container shrink-0">
-            <div class="letreiro-texto italic uppercase text-xs">
-                🔴 Osmir Belo: Bem-vindo ao novo painel do Educa Diadema — Mais rápido, mais mobile!
+            <div class="letreiro-texto">
+                🚨 PORTAL EDUCA DIADEMA: O CANAL DA EDUCAÇÃO MUNICIPAL • R$ 3 MILHÕES EM INVESTIMENTOS • ASSISTA NO YOUTUBE @EDUCADIADEMA • NOVIDADES DIÁRIAS COM OSMIR BELO 🚨
             </div>
         </div>
 
-        <!-- Área de Scroll -->
-        <div class="flex-grow overflow-y-auto scroll-area bg-slate-100 p-4 lg:p-10">
+        <!-- Conteúdo -->
+        <div class="flex-grow overflow-y-auto bg-slate-50 p-4 lg:p-10 pb-32 lg:pb-10">
             
+            <!-- Início -->
             <div id="section-inicio" class="content-section active">
-                <div class="max-w-4xl mx-auto space-y-4">
-                    <h3 class="text-2xl font-black text-azul uppercase italic border-b-4 border-dourado inline-block mb-4">Mural</h3>
+                <div class="max-w-4xl mx-auto space-y-8">
                     
-                    <article class="card-noticia p-6">
-                        <div class="flex flex-col md:flex-row gap-6">
-                            <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=400" class="w-full md:w-40 h-40 object-cover rounded-xl">
-                            <div>
-                                <span class="bg-azul text-dourado text-[10px] font-black px-2 py-1 rounded">INSTAGRAM</span>
-                                <h4 class="text-xl font-black text-azul mt-2 leading-tight uppercase italic">Educação que Transforma</h4>
-                                <p class="text-slate-500 text-sm mt-2 italic leading-snug">"Acompanhe as ações pedagógicas e o impacto da nossa rede na comunidade."</p>
-                                <a href="https://www.instagram.com/educadiadema/" target="_blank" class="inline-block mt-4 bg-azul text-dourado px-6 py-2 rounded-lg font-black text-[10px] uppercase shadow-md">Acessar Post</a>
+                    <!-- NOTÍCIA DE DESTAQUE -->
+                    <div class="news-banner p-6 md:p-10 rounded-3xl shadow-2xl relative overflow-hidden group">
+                        <div class="relative z-10">
+                            <span class="bg-amber-400 text-[#004a8d] text-[10px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block tracking-widest">Destaque do Dia</span>
+                            <h3 class="text-white text-2xl md:text-4xl font-black uppercase leading-tight mb-6 italic">
+                                INVESTIMENTO DIRETO NA ESCOLA: R$ 3 MILHÕES PARA DIADEMA!
+                            </h3>
+                            <div class="flex flex-wrap gap-4 items-center">
+                                <a href="https://www.instagram.com/p/DUb_APlDNvb/" target="_blank" class="bg-white text-[#004a8d] px-8 py-3 rounded-xl font-black uppercase text-sm hover:bg-amber-400 hover:scale-105 transition-all flex items-center gap-2">
+                                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                                    Ler Notícia Completa
+                                </a>
                             </div>
                         </div>
-                    </article>
+                        <div class="absolute -right-10 -bottom-10 opacity-10 text-[180px] pointer-events-none group-hover:scale-110 transition-transform duration-700">📣</div>
+                    </div>
 
-                    <div class="p-6 bg-white rounded-2xl border border-slate-200 shadow-sm">
-                        <p class="text-slate-600 text-sm leading-relaxed italic">
-                            Painel de controle otimizado para postagens rápidas. Desenvolvido para facilitar a gestão de conteúdo do portal.
-                        </p>
+                    <div class="h-px bg-slate-200 w-full my-4"></div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Card YouTube -->
+                        <a href="https://www.youtube.com/@educadiadema" target="_blank" class="social-card bg-white p-8 rounded-3xl shadow-lg border-t-8 border-red-600 flex flex-col items-center text-center">
+                            <svg class="w-16 h-16 mb-6" viewBox="0 0 24 24" fill="#FF0000">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
+                            <h4 class="text-2xl font-black text-slate-800 uppercase mb-2">YouTube Official</h4>
+                            <p class="text-slate-500 mb-6">Assista aos registros das conquistas da nossa rede.</p>
+                            <span class="bg-red-50 text-red-600 px-6 py-2 rounded-full font-bold text-sm">Acessar Canal</span>
+                        </a>
+
+                        <!-- Card Instagram -->
+                        <a href="https://www.instagram.com/educadiadema/" target="_blank" class="social-card bg-white p-8 rounded-3xl shadow-lg border-t-8 border-pink-500 flex flex-col items-center text-center">
+                            <svg class="w-16 h-16 mb-6" viewBox="0 0 24 24">
+                                <defs>
+                                    <linearGradient id="instagrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#f09433;stop-opacity:1" />
+                                        <stop offset="25%" style="stop-color:#e6683c;stop-opacity:1" />
+                                        <stop offset="50%" style="stop-color:#dc2743;stop-opacity:1" />
+                                        <stop offset="75%" style="stop-color:#cc2366;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#bc1888;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <path fill="url(#instagrad)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                            <h4 class="text-2xl font-black text-slate-800 uppercase mb-2">Instagram</h4>
+                            <p class="text-slate-500 mb-6">Acompanhe nosso dia a dia e bastidores em tempo real.</p>
+                            <span class="bg-pink-50 text-pink-600 px-6 py-2 rounded-full font-bold text-sm">Ver Perfil</span>
+                        </a>
+                    </div>
+
+                    <div class="bg-blue-50 border-2 border-dashed border-blue-200 p-8 rounded-3xl text-center">
+                        <p class="text-blue-900 font-bold italic">"O registro da educação é a garantia da memória de um povo."</p>
+                        <p class="text-blue-400 text-xs font-black uppercase mt-2">— Gestão Educa Diadema</p>
                     </div>
                 </div>
             </div>
 
-            <div id="section-escrever" class="content-section">
-                <div class="max-w-2xl mx-auto bg-white p-6 rounded-2xl shadow-xl border-t-8 border-azul">
-                    <h3 class="text-xl font-black text-azul mb-6 uppercase italic">Nova Postagem</h3>
-                    <div class="space-y-4">
-                        <input type="text" placeholder="Título da Notícia" class="w-full p-4 bg-slate-50 border rounded-xl font-bold focus:outline-azul">
-                        <textarea placeholder="Conteúdo..." class="w-full h-48 p-4 bg-slate-50 border rounded-xl resize-none focus:outline-azul"></textarea>
-                        <button class="w-full bg-azul text-dourado py-4 rounded-xl font-black uppercase shadow-lg">Publicar Agora 🚀</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="section-jogo" class="content-section text-center">
-                <div class="max-w-sm mx-auto bg-azul p-6 rounded-3xl shadow-2xl border-4 border-dourado">
-                    <h3 class="text-xl font-black text-dourado mb-4 uppercase italic">Snake Educa</h3>
-                    <canvas id="game-canvas" width="300" height="300"></canvas>
-                    
-                    <div class="mt-4 flex flex-col items-center gap-2 lg:hidden">
-                        <button onclick="changeDir(0, -1)" class="control-btn">▲</button>
-                        <div class="flex gap-6">
-                            <button onclick="changeDir(-1, 0)" class="control-btn">◀</button>
-                            <button onclick="changeDir(1, 0)" class="control-btn">▶</button>
+            <!-- Nós -->
+            <div id="section-nos" class="content-section">
+                <div class="max-w-3xl mx-auto space-y-6">
+                    <div class="bg-[#004a8d] text-white p-8 rounded-3xl shadow-2xl relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 opacity-10 text-[150px]">📚</div>
+                        <h4 class="text-3xl font-black italic mb-8 border-b-2 border-amber-400 pb-2 w-fit uppercase">Institucional</h4>
+                        
+                        <div class="grid gap-10">
+                            <div>
+                                <h5 class="text-amber-400 font-black uppercase text-sm tracking-widest mb-3">Missão</h5>
+                                <p class="text-lg leading-relaxed text-blue-50">Registrar e divulgar, por meio de vídeos e conteúdos digitais, as ações e conquistas da rede municipal de educação de Diadema, aproximando a comunidade e ampliando o acesso à informação.</p>
+                            </div>
+                            <div>
+                                <h5 class="text-amber-400 font-black uppercase text-sm tracking-widest mb-3">Visão</h5>
+                                <p class="text-lg leading-relaxed text-blue-50">Ser referência na documentação audiovisual da educação pública de Diadema, fortalecendo a transparência e a memória educacional do município.</p>
+                            </div>
+                            <div>
+                                <h5 class="text-amber-400 font-black uppercase text-sm tracking-widest mb-3">Valores</h5>
+                                <p class="text-lg leading-relaxed text-blue-50 font-semibold italic">Compromisso com a educação pública, transparência, ética, valorização da comunidade escolar, comunicação acessível e credibilidade.</p>
+                            </div>
                         </div>
-                        <button onclick="changeDir(0, 1)" class="control-btn">▼</button>
-                    </div>
-                    
-                    <div class="mt-6 flex justify-between items-center bg-black/30 p-3 rounded-xl text-white font-black text-sm">
-                        <div>PONTOS: <span id="score" class="text-dourado">0</span></div>
-                        <button onclick="startGame()" class="bg-dourado text-azul px-4 py-1 rounded-full text-[10px]">RECOMEÇAR</button>
                     </div>
                 </div>
             </div>
 
-            <div class="h-20 lg:hidden"></div> <!-- Espaçador para o menu mobile -->
+            <!-- Jogo -->
+            <div id="section-jogo" class="content-section">
+                <div class="max-w-sm mx-auto flex flex-col items-center">
+                    <div class="bg-[#004a8d] p-6 rounded-[2.5rem] shadow-2xl border-4 border-amber-400 w-full mb-6">
+                        <div class="flex justify-between items-center mb-4 text-white font-black text-xs uppercase">
+                            <span>Score: <span id="score" class="text-amber-400">0</span></span>
+                            <span>Speed: <span id="speed-level" class="text-amber-400">1.0x</span></span>
+                        </div>
+                        <div class="relative mx-auto w-fit">
+                            <canvas id="game-canvas" width="280" height="280"></canvas>
+                            <div id="game-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-black/80 rounded-xl">
+                                <span class="text-white font-black mb-4 uppercase tracking-widest">Recreio Educa</span>
+                                <button onclick="startGame()" class="bg-amber-400 text-[#004a8d] px-10 py-4 rounded-full font-black uppercase shadow-xl hover:scale-105 transition active:scale-95">Jogar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 w-fit">
+                        <div></div>
+                        <button class="d-pad-btn" onclick="handleDirection('UP')">▲</button>
+                        <div></div>
+                        <button class="d-pad-btn" onclick="handleDirection('LEFT')">◀</button>
+                        <button class="d-pad-btn" onclick="handleDirection('DOWN')">▼</button>
+                        <button class="d-pad-btn" onclick="handleDirection('RIGHT')">▶</button>
+                    </div>
+                    <p class="mt-4 text-[10px] text-slate-400 font-black uppercase tracking-widest">Controles Táteis</p>
+                </div>
+            </div>
+
         </div>
     </main>
 
     <script>
+        function atualizarRelogio() {
+            const agora = new Date();
+            const horas = String(agora.getHours()).padStart(2, '0');
+            const minutos = String(agora.getMinutes()).padStart(2, '0');
+            const segundos = String(agora.getSeconds()).padStart(2, '0');
+            document.getElementById('relogio').innerText = `${horas}:${minutos}:${segundos}`;
+        }
+        setInterval(atualizarRelogio, 1000);
+        atualizarRelogio();
+
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
-
+            document.querySelectorAll('aside button').forEach(b => b.classList.remove('bg-amber-400', 'text-[#004a8d]'));
+            
             document.getElementById('section-' + sectionId).classList.add('active');
+            document.getElementById('m-nav-' + sectionId)?.classList.add('active');
             
-            const n = document.getElementById('nav-' + sectionId); if(n) n.classList.add('active');
-            const m = document.getElementById('m-nav-' + sectionId); if(m) m.classList.add('active');
-            
-            if (sectionId === 'jogo') {
-                setTimeout(startGame, 100);
-            } else {
-                stopGame();
+            const btn = document.getElementById('nav-' + sectionId);
+            if(btn) {
+                btn.classList.add('bg-amber-400', 'text-[#004a8d]');
             }
+            
+            if (sectionId !== 'jogo') stopGame();
         }
 
-        // Lógica do Jogo
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
         const scoreElement = document.getElementById('score');
-        let snake, food, dx, dy, score, gameInterval;
+        const speedElement = document.getElementById('speed-level');
+        const overlay = document.getElementById('game-overlay');
+        
+        let snake, food, dx, dy, score, gameInterval, currentSpeed;
 
         function startGame() {
-            stopGame();
-            snake = [{x: 10, y: 10}]; food = {x: 5, y: 5};
-            dx = 1; dy = 0; score = 0;
+            overlay.classList.add('hidden');
+            snake = [{x: 10, y: 10}]; 
+            food = {x: 15, y: 15};
+            dx = 1; dy = 0; 
+            score = 0;
+            currentSpeed = 160;
             scoreElement.innerText = score;
-            gameInterval = setInterval(draw, 150);
+            speedElement.innerText = "1.0x";
+            runGameLoop();
         }
 
-        function stopGame() { clearInterval(gameInterval); }
+        function runGameLoop() {
+            clearInterval(gameInterval);
+            gameInterval = setInterval(draw, currentSpeed);
+        }
 
-        function changeDir(nx, ny) {
-            if ((nx===-dx && nx!==0) || (ny===-dy && ny!==0)) return;
-            dx=nx; dy=ny;
+        function stopGame() { 
+            clearInterval(gameInterval); 
+            overlay.classList.remove('hidden');
+        }
+
+        function handleDirection(dir) {
+            if (dir === 'UP' && dy === 0) { dx = 0; dy = -1; }
+            if (dir === 'DOWN' && dy === 0) { dx = 0; dy = 1; }
+            if (dir === 'LEFT' && dx === 0) { dx = -1; dy = 0; }
+            if (dir === 'RIGHT' && dx === 0) { dx = 1; dy = 0; }
         }
 
         function draw() {
             const head = {x: snake[0].x + dx, y: snake[0].y + dy};
-            if (head.x<0 || head.x>=20 || head.y<0 || head.y>=20 || snake.some(s=>s.x===head.x && s.y===head.y)) {
+            if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || snake.some(s => s.x === head.x && s.y === head.y)) {
                 stopGame(); return;
             }
             snake.unshift(head);
-            if (head.x===food.x && head.y===food.y) {
-                score+=10; scoreElement.innerText=score;
-                food = {x:Math.floor(Math.random()*20), y:Math.floor(Math.random()*20)};
-            } else snake.pop();
-
-            ctx.fillStyle = '#001a33'; ctx.fillRect(0,0,300,300);
-            ctx.fillStyle = '#ffcc00'; ctx.fillRect(food.x*15, food.y*15, 14, 14);
-            snake.forEach((s,i) => {
-                ctx.fillStyle = i===0 ? '#ffcc00' : '#ffffff';
-                ctx.fillRect(s.x*15, s.y*15, 14, 14);
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                scoreElement.innerText = score;
+                if (currentSpeed > 60) {
+                    currentSpeed -= 4;
+                    speedElement.innerText = (1 + ((160 - currentSpeed) / 100)).toFixed(1) + "x";
+                    runGameLoop();
+                }
+                food = { x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20) };
+            } else {
+                snake.pop();
+            }
+            ctx.fillStyle = '#001a33'; ctx.fillRect(0, 0, 280, 280);
+            ctx.fillStyle = '#ffb400';
+            ctx.beginPath();
+            ctx.arc(food.x * 14 + 7, food.y * 14 + 7, 5, 0, Math.PI * 2);
+            ctx.fill();
+            snake.forEach((s, i) => {
+                ctx.fillStyle = i === 0 ? '#ffb400' : 'white';
+                ctx.fillRect(s.x * 14 + 1, s.y * 14 + 1, 12, 12);
             });
         }
-
-        window.addEventListener('keydown', e => {
-            if(e.key==='ArrowUp') changeDir(0,-1);
-            if(e.key==='ArrowDown') changeDir(0,1);
-            if(e.key==='ArrowLeft') changeDir(-1,0);
-            if(e.key==='ArrowRight') changeDir(1,0);
-        });
+        
+        // Init active state
+        showSection('inicio');
     </script>
 </body>
 </html>
