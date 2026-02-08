@@ -16,6 +16,7 @@
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #f1f5f9; 
+            overscroll-behavior-y: contain; /* Evita o "puxar para atualizar" no mobile */
         }
 
         .bg-azul { background-color: var(--azul-diadema); }
@@ -49,7 +50,7 @@
         .content-section { display: none; }
         .content-section.active { display: block; }
 
-        /* Estilo do Letreiro (Marquee) */
+        /* Estilo do Letreiro */
         .letreiro-container {
             background-color: var(--dourado-diadema);
             color: var(--azul-diadema);
@@ -65,7 +66,7 @@
         .letreiro-texto {
             display: inline-block;
             padding-left: 100%;
-            animation: marquee 20s linear infinite;
+            animation: marquee 25s linear infinite;
         }
 
         @keyframes marquee {
@@ -73,12 +74,35 @@
             100% { transform: translate(-100%, 0); }
         }
 
-        /* Ajuste da imagem da notícia */
-        .img-noticia {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 12px;
+        /* JOGO DA COBRINHA */
+        #game-canvas {
+            background-color: #001a33;
+            border: 4px solid var(--dourado-diadema);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            touch-action: none; /* Desabilita gestos do browser sobre o jogo */
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--dourado-diadema);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: background 0.2s;
+        }
+
+        .control-btn:active {
+            background: var(--dourado-diadema);
+            color: var(--azul-diadema);
         }
     </style>
 </head>
@@ -95,22 +119,30 @@
             <button onclick="showSection('inicio')" id="nav-inicio" class="nav-item active w-full text-left p-4 rounded-xl flex items-center">
                 <span class="mr-3">🏠</span> Capa do Site
             </button>
-            <button onclick="showSection('escrever')" id="nav-escrever" class="w-full bg-dourado text-azul font-black p-4 rounded-xl mt-6 shadow-lg hover:brightness-110 flex items-center justify-center">
-                ✍️ NOVA MATÉRIA
+            <button onclick="showSection('escrever')" id="nav-escrever" class="nav-item w-full text-left p-4 rounded-xl flex items-center">
+                <span class="mr-3">✍️</span> Nova Matéria
             </button>
         </nav>
 
-        <div class="p-6 bg-black/20 mt-auto">
-            <p class="text-[10px] font-bold text-dourado uppercase mb-1">Editor-Chefe</p>
-            <p class="text-sm font-black">Osmir Belo</p>
+        <!-- Seção Inferior do Menu -->
+        <div class="p-4 space-y-4 border-t border-white/10">
+            <!-- BOTÃO DO JOGO NO FUNDO -->
+            <button onclick="showSection('jogo')" id="nav-jogo" class="w-full text-center p-4 rounded-xl font-black bg-green-600 hover:bg-green-500 text-white shadow-lg transition-all flex items-center justify-center gap-2">
+                <span>🐍</span> HORA DO RECREIO
+            </button>
+
+            <div class="p-4 bg-black/20 rounded-xl">
+                <p class="text-[10px] font-bold text-dourado uppercase mb-1">Editor-Chefe</p>
+                <p class="text-sm font-black">Osmir Belo</p>
+            </div>
         </div>
     </aside>
 
-    <!-- Conteúdo -->
+    <!-- Conteúdo Principal -->
     <main class="flex-grow flex flex-col h-screen overflow-hidden">
         
         <header class="bg-azul p-5 flex items-center justify-between shadow-md">
-            <h2 class="text-dourado font-black text-xl lg:hidden">EDUCA DIADEMA</h2>
+            <h2 class="text-dourado font-black text-xl lg:hidden italic uppercase">EDUCA DIADEMA</h2>
             <div class="hidden lg:block text-white font-bold text-sm">
                 Portal de Notícias <span class="text-dourado mx-2">|</span> <span id="current-date"></span>
             </div>
@@ -120,7 +152,7 @@
             </div>
         </header>
 
-        <!-- LETREIRO DE ROLAGEM -->
+        <!-- LETREIRO -->
         <div class="letreiro-container">
             <div class="letreiro-texto italic">
                 🔴 ÚLTIMA NOTÍCIA: CONFIRA A NOVA POSTAGEM NO INSTAGRAM DO EDUCA DIADEMA SOBRE A EDUCAÇÃO NA NOSSA CIDADE! — ACESSE O LINK NA MATÉRIA ABAIXO —
@@ -129,21 +161,18 @@
 
         <div class="flex-grow overflow-y-auto p-6 lg:p-12 bg-slate-100">
             
+            <!-- SEÇÃO INÍCIO -->
             <div id="section-inicio" class="content-section active">
                 <div class="max-w-4xl mx-auto">
-                    <div class="mb-12 border-b-4 border-azul pb-4 flex justify-between items-center">
+                    <div class="mb-12 border-b-4 border-azul pb-4">
                         <h3 class="text-4xl font-black text-azul uppercase italic">Plantão de Notícias</h3>
                     </div>
 
                     <div class="space-y-8" id="lista-noticias">
-                        
-                        <!-- BLOCO DA NOTÍCIA COM IMAGEM -->
                         <article class="card-noticia p-8">
                             <div class="flex flex-col md:flex-row gap-8">
-                                <!-- AQUI ENTRA A FOTO -->
                                 <div class="w-full md:w-48 h-48 shrink-0 overflow-hidden rounded-xl shadow-md border-2 border-dourado">
-                                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=500" alt="Educação" class="img-noticia">
-                                    <!-- Dica: Para usar sua foto, você pode subir ela no GitHub e trocar o link acima pelo nome do arquivo -->
+                                    <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=500" alt="Educação" class="w-full h-full object-cover">
                                 </div>
                                 <div class="flex-grow">
                                     <div class="flex items-center gap-3 mb-3">
@@ -164,7 +193,6 @@
                                 </div>
                             </div>
                         </article>
-
                     </div>
                 </div>
             </div>
@@ -174,13 +202,36 @@
                 <div class="max-w-3xl mx-auto bg-white p-10 rounded-2xl shadow-2xl border-t-8 border-azul">
                     <h3 class="text-3xl font-black text-azul mb-8 uppercase italic border-b pb-4">Nova Postagem</h3>
                     <div class="space-y-6">
-                        <input type="text" id="input-tag" placeholder="Assunto (Ex: Gestão)" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-azul">
-                        <input type="text" id="input-titulo" placeholder="Título da Manchete" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-black text-2xl text-azul">
-                        <textarea id="input-texto" placeholder="Texto completo..." class="w-full h-80 p-6 bg-slate-50 border border-slate-200 rounded-xl resize-none text-lg"></textarea>
-                        
-                        <button class="w-full bg-azul text-dourado py-5 rounded-2xl font-black text-lg uppercase shadow-xl hover:brightness-110 transition-all">
-                            GERAR BLOCO DE NOTÍCIA 🚀
-                        </button>
+                        <input type="text" placeholder="Assunto (Ex: Gestão)" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-bold text-azul">
+                        <input type="text" placeholder="Título da Manchete" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl font-black text-2xl text-azul">
+                        <textarea placeholder="Texto completo..." class="w-full h-80 p-6 bg-slate-50 border border-slate-200 rounded-xl resize-none text-lg"></textarea>
+                        <button class="w-full bg-azul text-dourado py-5 rounded-2xl font-black text-lg uppercase shadow-xl hover:brightness-110">GERAR BLOCO 🚀</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEÇÃO: JOGO DA COBRINHA -->
+            <div id="section-jogo" class="content-section text-center">
+                <div class="max-w-lg mx-auto bg-azul p-6 rounded-3xl shadow-2xl border-4 border-dourado">
+                    <h3 class="text-2xl font-black text-dourado mb-1 uppercase italic">Snake Game Educa</h3>
+                    <p class="text-white text-[10px] mb-4 uppercase tracking-widest font-bold">Use as setas ou os botões abaixo!</p>
+                    
+                    <!-- O Canvas agora é 300x300 para caber melhor -->
+                    <canvas id="game-canvas" width="300" height="300"></canvas>
+                    
+                    <div class="mt-4 flex justify-between items-center bg-black/30 p-3 rounded-xl">
+                        <div class="text-white font-black text-lg uppercase">Pontos: <span id="score" class="text-dourado">0</span></div>
+                        <button onclick="startGame()" class="bg-dourado text-azul font-black px-4 py-2 rounded-full text-xs hover:scale-105 transition-transform uppercase italic">Reiniciar</button>
+                    </div>
+
+                    <!-- CONTROLES MOBILE -->
+                    <div class="mt-6 flex flex-col items-center gap-2">
+                        <button onclick="changeDir(0, -1)" class="control-btn">▲</button>
+                        <div class="flex gap-8">
+                            <button onclick="changeDir(-1, 0)" class="control-btn">◀</button>
+                            <button onclick="changeDir(1, 0)" class="control-btn">▶</button>
+                        </div>
+                        <button onclick="changeDir(0, 1)" class="control-btn">▼</button>
                     </div>
                 </div>
             </div>
@@ -192,12 +243,110 @@
         function showSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            document.getElementById('nav-jogo').classList.remove('ring-4', 'ring-dourado');
+
             document.getElementById('section-' + sectionId).classList.add('active');
-            document.getElementById('nav-' + sectionId).classList.add('active');
+            
+            const navBtn = document.getElementById('nav-' + sectionId);
+            if (navBtn) navBtn.classList.add('active');
+            
+            if (sectionId === 'jogo') {
+                document.getElementById('nav-jogo').classList.add('ring-4', 'ring-dourado');
+                startGame();
+            } else {
+                stopGame();
+            }
         }
 
         const data = new Date();
         document.getElementById('current-date').innerText = data.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
+
+        // LÓGICA DO JOGO DA COBRINHA
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        
+        let snake = [{x: 10, y: 10}];
+        let food = {x: 12, y: 12};
+        let dx = 0;
+        let dy = 0;
+        let score = 0;
+        let gameInterval;
+        const gridSize = 15; // Ajustado para o canvas de 300
+        const tileCount = 20;
+
+        function startGame() {
+            stopGame();
+            snake = [{x: 10, y: 10}];
+            food = {x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount)};
+            dx = 1; dy = 0;
+            score = 0;
+            scoreElement.innerText = score;
+            gameInterval = setInterval(drawGame, 100);
+        }
+
+        function stopGame() {
+            clearInterval(gameInterval);
+        }
+
+        function changeDir(newDx, newDy) {
+            // Evita inverter a direção (ex: ir para a esquerda se está indo para a direita)
+            if ((newDx === -dx && newDx !== 0) || (newDy === -dy && newDy !== 0)) return;
+            dx = newDx;
+            dy = newDy;
+        }
+
+        function drawGame() {
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+            
+            if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount || snake.some(s => s.x === head.x && s.y === head.y)) {
+                stopGame();
+                return;
+            }
+
+            snake.unshift(head);
+
+            if (head.x === food.x && head.y === food.y) {
+                score += 10;
+                scoreElement.innerText = score;
+                food = {x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount)};
+            } else {
+                snake.pop();
+            }
+
+            ctx.fillStyle = '#001a33';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Comida
+            ctx.fillStyle = '#ffcc00';
+            ctx.beginPath();
+            ctx.arc(food.x * gridSize + gridSize/2, food.y * gridSize + gridSize/2, gridSize/2 - 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Cobra
+            ctx.fillStyle = '#4ade80';
+            snake.forEach((segment, index) => {
+                // Cabeça um pouco diferente
+                if (index === 0) ctx.fillStyle = '#22c55e';
+                else ctx.fillStyle = '#4ade80';
+                
+                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 1, gridSize - 1);
+            });
+        }
+
+        // Prevenção de scroll e mapeamento de teclas
+        window.addEventListener('keydown', e => {
+            const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '];
+            if (keys.includes(e.key)) {
+                e.preventDefault(); // Impede a página de rolar
+            }
+
+            if (e.key === 'ArrowUp') changeDir(0, -1);
+            if (e.key === 'ArrowDown') changeDir(0, 1);
+            if (e.key === 'ArrowLeft') changeDir(-1, 0);
+            if (e.key === 'ArrowRight') changeDir(1, 0);
+        });
     </script>
 </body>
 </html>
