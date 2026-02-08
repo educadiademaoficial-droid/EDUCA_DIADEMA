@@ -129,7 +129,7 @@
         }
     </style>
 </head>
-<body class="flex min-h-screen">
+<body class="flex min-h-screen overflow-hidden">
 
     <!-- Menu Lateral (Desktop) -->
     <aside class="sidebar w-64 text-white hidden lg:flex flex-col shrink-0 shadow-2xl">
@@ -184,12 +184,15 @@
             </div>
         </div>
 
-        <div class="flex-grow overflow-y-auto p-4 lg:p-10 bg-slate-100">
+        <!-- Div de Conteúdo com Scroll Habilitado -->
+        <div class="flex-grow overflow-y-auto p-4 lg:p-10 bg-slate-100 pb-24">
             
             <!-- SEÇÃO INÍCIO -->
             <div id="section-inicio" class="content-section active">
                 <div class="max-w-4xl mx-auto space-y-6">
                     <h3 class="text-2xl font-black text-azul uppercase italic border-b-4 border-dourado inline-block">Capa do Site</h3>
+                    
+                    <!-- Exemplo de múltiplo conteúdo para testar o scroll -->
                     <article class="card-noticia p-6 bg-white">
                         <div class="flex flex-col md:flex-row gap-6">
                             <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=400" class="w-full md:w-40 h-40 object-cover rounded-xl border-2 border-slate-100">
@@ -199,6 +202,25 @@
                                 <p class="text-slate-500 text-sm mt-2 italic font-medium">"Transformando a educação através da comunicação."</p>
                                 <a href="https://www.instagram.com/p/DUZFku4jHnl/" target="_blank" class="inline-block mt-4 bg-azul text-dourado px-4 py-2 rounded-lg font-black text-[10px] uppercase">Acessar Perfil 🔗</a>
                             </div>
+                        </div>
+                    </article>
+
+                    <!-- Segunda notícia para garantir que o scroll seja necessário -->
+                    <article class="card-noticia p-6 bg-white">
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?q=80&w=400" class="w-full md:w-40 h-40 object-cover rounded-xl border-2 border-slate-100">
+                            <div>
+                                <span class="bg-azul text-dourado text-[10px] font-black px-2 py-1 rounded">REDE MUNICIPAL</span>
+                                <h4 class="text-xl font-black text-azul mt-2 leading-tight uppercase italic">Planejamento 2026: Diadema avança no ensino infantil</h4>
+                                <p class="text-slate-500 text-sm mt-2 italic font-medium">Acompanhe os detalhes das melhorias nas creches conveniadas.</p>
+                                <button class="inline-block mt-4 bg-slate-200 text-azul px-4 py-2 rounded-lg font-black text-[10px] uppercase">Ler Mais</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="card-noticia p-6 bg-white opacity-50">
+                        <div class="text-center py-4">
+                            <p class="text-slate-400 font-bold italic">Mais notícias em breve...</p>
                         </div>
                     </article>
                 </div>
@@ -284,7 +306,7 @@
             dx = 1; dy = 0;
             score = 0;
             scoreElement.innerText = score;
-            gameInterval = setInterval(drawGame, 120); // Um pouquinho mais lento para ser mais fácil no celular
+            gameInterval = setInterval(drawGame, 120);
         }
 
         function stopGame() { clearInterval(gameInterval); }
